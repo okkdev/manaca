@@ -50,7 +50,8 @@ defmodule Manaca.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       # {:plug_cowboy, "~> 2.5"},
-      {:bandit, "~> 1.0-pre"}
+      {:bandit, "~> 1.0-pre"},
+      {:ecto_ulid, "~> 0.3.0"}
     ]
   end
 
