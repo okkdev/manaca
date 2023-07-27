@@ -17,7 +17,7 @@ defmodule ManacaWeb.Router do
   scope "/", ManacaWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive
 
     live "/users", UserLive.Index, :index
     live "/users/new", UserLive.Index, :new

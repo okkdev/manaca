@@ -37,6 +37,10 @@ defmodule Manaca.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_user_by_card_id(card_id) do
+    Repo.get_by(User, card_id: card_id)
+  end
+
   @doc """
   Creates a user.
 
