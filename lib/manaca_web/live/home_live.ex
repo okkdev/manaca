@@ -6,7 +6,11 @@ defmodule ManacaWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div id="ring" class="w-10 h-10 bg-gray-400"></div>
+    <div id="ring" class="p-20 rounded-xl outline outline-8">
+      <div class="flex justify-center items-center h-full">
+        Scan manaCard
+      </div>
+    </div>
     <form
       id="card_id_form"
       class="absolute w-0 h-0 opacity-0 pointer-events-none"
@@ -41,7 +45,7 @@ defmodule ManacaWeb.HomeLive do
 
       user ->
         IO.inspect(user)
-        {:noreply, socket}
+        {:noreply, push_navigate(socket, to: ~p"/users/#{user.id}/edit")}
     end
   end
 end

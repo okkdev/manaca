@@ -30,11 +30,11 @@ Hooks.RingStatus = {
     this.ring = document.getElementById("ring")
     this.interval = setInterval(() => {
       if (this.el === document.activeElement && document.hasFocus()) {
-        this.ring.classList.add("bg-green-500")
-        this.ring.classList.remove("bg-red-500")
+        this.ring.classList.add("outline-green-200")
+        this.ring.classList.remove("outline-red-200")
       } else {
-        this.ring.classList.remove("bg-green-500")
-        this.ring.classList.add("bg-red-500")
+        this.ring.classList.remove("outline-green-200")
+        this.ring.classList.add("outline-red-200")
       }
     }, 200)
   },
