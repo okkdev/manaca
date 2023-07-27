@@ -22,10 +22,32 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+let Hooks = {}
+Hooks.RingStatus = {
+  interval: null,
+  ring: null,
+  mounted() {
+    this.ring = document.getElementById("ring")
+    this.interval = setInterval(() => {
+      if (this.el === document.activeElement && document.hasFocus()) {
+        this.ring.classList.add("bg-green-500")
+        this.ring.classList.remove("bg-red-500")
+      } else {
+        this.ring.classList.remove("bg-green-500")
+        this.ring.classList.add("bg-red-500")
+      }
+    }, 200)
+  },
+  destroyed() {
+    clearInterval(this.interval)
+  },
+}
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: Hooks,
   params: { _csrf_token: csrfToken },
 })
 

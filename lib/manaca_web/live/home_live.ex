@@ -6,16 +6,18 @@ defmodule ManacaWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
+    <div id="ring" class="w-10 h-10 bg-gray-400"></div>
     <form
       id="card_id_form"
       class="absolute w-0 h-0 opacity-0 pointer-events-none"
       phx-change={JS.push("check_id") |> JS.dispatch("manaca:reset_form", to: "#card_id_form")}
     >
       <input
+        id="card_id_input"
         name="card_id"
         type="text"
+        phx-hook="RingStatus"
         phx-mounted={JS.focus()}
-        phx-window-focus={JS.focus()}
         phx-blur={JS.focus()}
         phx-debounce="500"
       />
