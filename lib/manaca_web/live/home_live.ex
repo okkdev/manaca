@@ -6,10 +6,63 @@ defmodule ManacaWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div id="ring" class="p-20 rounded-xl outline outline-8">
-      <div class="flex justify-center items-center h-full">
-        Scan manaCard
-      </div>
+    <div id="ring" class="p-10 rounded-2xl outline outline-8 outline-green-200">
+      <%= if assigns[:user] do %>
+        <div class="grid grid-cols-4 gap-5">
+          <div class="col-span-4 text-center">
+            <%= "#{@user.firstname} #{@user.lastname}" %>
+          </div>
+
+          <div class="col-span-4 py-5 font-bold text-center">
+            <div class="text-4xl">
+              <%= @user.tokens %>
+            </div>
+            <div>
+              Tokens
+            </div>
+          </div>
+
+          <button
+            class="p-6 text-xl font-semibold bg-yellow-200 rounded hover:bg-yellow-300 disabled:bg-gray-300"
+            disabled={@user.tokens - 10 < 0}
+            phx-click="subtract-10"
+          >
+            - 10
+          </button>
+          <button
+            class="p-6 text-xl font-semibold bg-yellow-100 rounded hover:bg-yellow-200 disabled:bg-gray-200"
+            disabled={@user.tokens - 1 < 0}
+            phx-click="subtract-1"
+          >
+            - 1
+          </button>
+          <button
+            class="p-6 text-xl font-semibold bg-green-100 rounded hover:bg-green-200"
+            phx-click="add-1"
+          >
+            + 1
+          </button>
+          <button
+            class="p-6 text-xl font-semibold bg-green-200 rounded hover:bg-green-300"
+            phx-click="add-10"
+          >
+            + 10
+          </button>
+
+          <div class="flex col-span-4 justify-center items-center">
+            <button
+              class="p-2 text-white bg-gray-300 rounded-full aspect-square hover:bg-gray-400"
+              phx-click="close_user"
+            >
+              <.icon name="hero-x-mark" class="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      <% else %>
+        <div class="flex justify-center items-center h-full">
+          Scan manacard
+        </div>
+      <% end %>
     </div>
     <form
       id="card_id_form"
@@ -23,6 +76,7 @@ defmodule ManacaWeb.HomeLive do
         phx-hook="RingStatus"
         phx-mounted={JS.focus()}
         phx-blur={JS.focus()}
+        phx-click-away={JS.focus()}
         phx-debounce="500"
       />
       <input type="reset" />
@@ -45,7 +99,27 @@ defmodule ManacaWeb.HomeLive do
 
       user ->
         IO.inspect(user)
-        {:noreply, push_navigate(socket, to: ~p"/users/#{user.id}/edit")}
+        {:noreply, assign(socket, user: user)}
     end
+  end
+
+  def handle_event("close_user", _, socket), do: {:noreply, assign(socket, user: nil)}
+
+  def handle_event("subtract-" <> num, _, socket) do
+    {:ok, user} =
+      Accounts.update_user(socket.assigns.user, %{
+        tokens: socket.assigns.user.tokens - String.to_integer(num)
+      })
+
+    {:noreply, assign(socket, user: user)}
+  end
+
+  def handle_event("add-" <> num, _, socket) do
+    {:ok, user} =
+      Accounts.update_user(socket.assigns.user, %{
+        tokens: socket.assigns.user.tokens + String.to_integer(num)
+      })
+
+    {:noreply, assign(socket, user: user)}
   end
 end
