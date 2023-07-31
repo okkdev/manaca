@@ -12,6 +12,7 @@ defmodule ManacaWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug ManacaWeb.ApiAuthPlug
   end
 
   scope "/", ManacaWeb do
@@ -31,7 +32,7 @@ defmodule ManacaWeb.Router do
   scope "/api", ManacaWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/cards", CardController, only: [:show, :update]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

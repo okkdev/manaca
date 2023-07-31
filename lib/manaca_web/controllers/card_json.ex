@@ -1,12 +1,5 @@
-defmodule ManacaWeb.UserJson do
+defmodule ManacaWeb.CardJSON do
   alias Manaca.Accounts.User
-
-  @doc """
-  Renders a list of users.
-  """
-  def index(%{users: users}) do
-    %{data: for(user <- users, do: data(user))}
-  end
 
   @doc """
   Renders a single user.
@@ -18,6 +11,7 @@ defmodule ManacaWeb.UserJson do
   defp data(%User{} = user) do
     %{
       id: user.id,
+      card_id: user.card_id,
       tokens: user.tokens,
       firstname: user.firstname,
       lastname: user.lastname,
