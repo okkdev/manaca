@@ -7,15 +7,24 @@ defmodule ManacaWeb.CardController do
   action_fallback ManacaWeb.FallbackController
 
   def show(conn, %{"id" => id}) do
-    user = Accounts.get_user_by_card_id(id)
-    render(conn, :show, user: user)
+    case Accounts.get_user_by_card_id(id) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        render(conn, :show, user: user)
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user_by_card_id(id)
+    case Accounts.get_user_by_card_id(id) do
+      nil ->
+        {:error, :not_found}
 
-    with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-      render(conn, :show, user: user)
+      user ->
+        with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
+          render(conn, :show, user: user)
+        end
     end
   end
 end
