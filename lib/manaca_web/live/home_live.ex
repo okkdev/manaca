@@ -60,26 +60,25 @@ defmodule ManacaWeb.HomeLive do
         </div>
       <% else %>
         <div class="flex justify-center items-center h-full">
-          Scan manacard
+          scan manaca
         </div>
       <% end %>
     </div>
-    <form
-      id="card_id_form"
-      class="absolute w-0 h-0 opacity-0 pointer-events-none"
-      phx-change={JS.push("check_id") |> JS.dispatch("manaca:reset_form", to: "#card_id_form")}
-    >
+    <form class="absolute w-0 h-0 opacity-0 pointer-events-none" autocomplete="off">
       <input
         id="card_id_input"
         name="card_id"
         type="text"
+        autocomplete="off"
+        aria-autocomplete="none"
+        phx-change={JS.push("check_id") |> JS.dispatch("click", to: "#card_id_reset")}
         phx-hook="RingStatus"
         phx-mounted={JS.focus()}
         phx-blur={JS.focus()}
         phx-click-away={JS.focus()}
         phx-debounce="500"
       />
-      <input type="reset" />
+      <button id="card_id_reset" type="reset" />
     </form>
     """
   end
@@ -91,14 +90,11 @@ defmodule ManacaWeb.HomeLive do
 
   @impl true
   def handle_event("check_id", %{"card_id" => card_id}, socket) do
-    IO.inspect(card_id)
-
     case Accounts.get_user_by_card_id(card_id) do
       nil ->
         {:noreply, socket}
 
       user ->
-        IO.inspect(user)
         {:noreply, assign(socket, user: user)}
     end
   end
