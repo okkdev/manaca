@@ -49,7 +49,7 @@ defmodule ManacaWeb.HomeLive do
             + 10
           </button>
 
-          <div class="flex col-span-4 justify-center items-center">
+          <div class="flex items-center justify-center col-span-4">
             <button
               class="p-2 text-white bg-gray-300 rounded-full aspect-square hover:bg-gray-400"
               phx-click="close_user"
@@ -59,19 +59,23 @@ defmodule ManacaWeb.HomeLive do
           </div>
         </div>
       <% else %>
-        <div class="flex justify-center items-center h-full">
+        <div class="flex items-center justify-center h-full">
           scan manaca
         </div>
       <% end %>
     </div>
-    <form class="absolute w-0 h-0 opacity-0 pointer-events-none" autocomplete="off">
+    <form
+      autocomplete="off"
+      class="absolute w-0 h-0 opacity-0 pointer-events-none"
+      phx-submit="check_id"
+    >
       <input
         id="card_id_input"
         name="card_id"
         type="text"
         autocomplete="off"
         aria-autocomplete="none"
-        phx-change={JS.push("check_id") |> JS.dispatch("click", to: "#card_id_reset")}
+        phx-change={JS.dispatch("click", to: "#card_id_reset")}
         phx-hook="RingStatus"
         phx-mounted={JS.focus()}
         phx-blur={JS.focus()}
@@ -90,17 +94,22 @@ defmodule ManacaWeb.HomeLive do
 
   @impl true
   def handle_event("check_id", %{"card_id" => card_id}, socket) do
-    case Accounts.get_user_by_card_id(card_id) do
-      nil ->
-        {:noreply, socket}
+    socket =
+      case Accounts.get_user_by_card_id(card_id) do
+        nil ->
+          socket
 
-      user ->
-        {:noreply, assign(socket, user: user)}
-    end
+        user ->
+          assign(socket, user: user)
+      end
+
+    {:noreply, push_event(socket, "click", %{to: "#card_id_reset"})}
   end
 
+  @impl true
   def handle_event("close_user", _, socket), do: {:noreply, assign(socket, user: nil)}
 
+  @impl true
   def handle_event("subtract-" <> num, _, socket) do
     {:ok, user} =
       Accounts.update_user(socket.assigns.user, %{
@@ -110,6 +119,7 @@ defmodule ManacaWeb.HomeLive do
     {:noreply, assign(socket, user: user)}
   end
 
+  @impl true
   def handle_event("add-" <> num, _, socket) do
     {:ok, user} =
       Accounts.update_user(socket.assigns.user, %{
