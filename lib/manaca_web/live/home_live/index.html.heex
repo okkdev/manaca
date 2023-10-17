@@ -1,0 +1,126 @@
+<div
+  id="ring"
+  style="outline-width: 1rem; border-radius: 5rem;"
+  class="p-10 rounded-3xl aspect-square outline outline-green-200"
+>
+  <%= cond do %>
+    <% assigns[:user] -> %>
+      <div class="grid grid-cols-4 gap-5 items-center p-5 h-full">
+        <div class="col-span-4 text-xl text-center">
+          <%= "#{@user.firstname} #{@user.lastname}" %>
+        </div>
+
+        <div class="col-span-4 py-5 font-bold text-center">
+          <div class="text-5xl">
+            <%= @user.tokens %>
+          </div>
+          <div>
+            Tokens
+          </div>
+        </div>
+
+        <button
+          class="p-6 text-xl font-semibold bg-yellow-200 rounded-xl hover:bg-yellow-300 aspect-square disabled:bg-gray-300"
+          disabled={@user.tokens - 10 < 0}
+          phx-click="subtract-10"
+        >
+          - 10
+        </button>
+        <button
+          class="p-6 text-xl font-semibold bg-yellow-100 rounded-xl hover:bg-yellow-200 aspect-square disabled:bg-gray-200"
+          disabled={@user.tokens - 1 < 0}
+          phx-click="subtract-1"
+        >
+          - 1
+        </button>
+        <button
+          class="p-6 text-xl font-semibold bg-green-100 rounded-xl hover:bg-green-200 aspect-square"
+          phx-click="add-1"
+        >
+          + 1
+        </button>
+        <button
+          class="p-6 text-xl font-semibold bg-green-200 rounded-xl hover:bg-green-300 aspect-square"
+          phx-click="add-10"
+        >
+          + 10
+        </button>
+
+        <div class="flex col-span-4 justify-center items-center">
+          <button
+            class="flex justify-center items-center p-2 text-white bg-gray-300 rounded-full hover:bg-gray-400"
+            phx-click="close_user"
+          >
+            <.icon name="hero-x-mark" class="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+    <% assigns[:creating_user] -> %>
+      <div class="flex flex-col gap-4 justify-center items-center h-full">
+        <div>
+          <.icon name="hero-credit-card-solid" class="w-52 h-52 text-gray-100" />
+        </div>
+        <div class="text-lg text-gray-200">
+          Scan Manaca for new user
+        </div>
+        <div class="flex col-span-4 justify-center items-center">
+          <button
+            class="flex justify-center items-center p-2 text-white bg-gray-300 rounded-full hover:bg-gray-400"
+            phx-click="close_user"
+          >
+            <.icon name="hero-x-mark" class="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+    <% true -> %>
+      <div class="flex flex-col gap-4 justify-center items-center h-full">
+        <div>
+          <.icon name="hero-credit-card-solid" class="w-52 h-52 text-gray-100" />
+        </div>
+        <div class="text-lg text-gray-200">
+          Scan Manaca
+        </div>
+        <div class="text-lg text-gray-200">
+          or
+        </div>
+        <button
+          class="px-3 py-2 text-white bg-gray-300 rounded-lg hover:bg-gray-400"
+          phx-click="create_user"
+        >
+          Create user
+        </button>
+      </div>
+  <% end %>
+</div>
+
+<.modal :if={@live_action == :new} id="user-modal" show on_cancel={JS.patch(~p"/")}>
+  <.live_component
+    module={ManacaWeb.HomeLive.NewUserForm}
+    id={:new}
+    title="Create new user"
+    action={:new}
+    user={@new_user}
+  />
+</.modal>
+
+<form
+  :if={@live_action != :new}
+  autocomplete="off"
+  class="absolute w-0 h-0 opacity-0 pointer-events-none"
+  phx-submit="check_id"
+>
+  <input
+    id="card_id_input"
+    name="card_id"
+    type="text"
+    autocomplete="off"
+    aria-autocomplete="none"
+    phx-change={JS.dispatch("click", to: "#card_id_reset")}
+    phx-hook="RingStatus"
+    phx-mounted={JS.focus()}
+    phx-blur={JS.focus()}
+    phx-click-away={JS.focus()}
+    phx-debounce="500"
+  />
+  <button id="card_id_reset" type="reset" />
+</form>

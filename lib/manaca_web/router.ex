@@ -18,7 +18,8 @@ defmodule ManacaWeb.Router do
   scope "/", ManacaWeb do
     pipe_through :browser
 
-    live "/", HomeLive
+    live "/", HomeLive.Index
+    live "/new", HomeLive.Index, :new
 
     live "/users", UserLive.Index, :index
     live "/users/new", UserLive.Index, :new
@@ -28,7 +29,6 @@ defmodule ManacaWeb.Router do
     live "/users/:id/show/edit", UserLive.Show, :edit
   end
 
-  # Other scopes may use custom stacks.
   scope "/api", ManacaWeb do
     pipe_through :api
 
