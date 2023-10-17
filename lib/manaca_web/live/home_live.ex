@@ -49,7 +49,7 @@ defmodule ManacaWeb.HomeLive do
             + 10
           </button>
 
-          <div class="flex items-center justify-center col-span-4">
+          <div class="flex col-span-4 justify-center items-center">
             <button
               class="p-2 text-white bg-gray-300 rounded-full aspect-square hover:bg-gray-400"
               phx-click="close_user"
@@ -59,7 +59,7 @@ defmodule ManacaWeb.HomeLive do
           </div>
         </div>
       <% else %>
-        <div class="flex items-center justify-center h-full">
+        <div class="flex justify-center items-center h-full">
           scan manaca
         </div>
       <% end %>
@@ -94,8 +94,10 @@ defmodule ManacaWeb.HomeLive do
 
   @impl true
   def handle_event("check_id", %{"card_id" => card_id}, socket) do
+    id = reverse_byte_order(card_id)
+
     socket =
-      case Accounts.get_user_by_card_id(card_id) do
+      case Accounts.get_user_by_card_id(id) do
         nil ->
           socket
 
@@ -128,4 +130,12 @@ defmodule ManacaWeb.HomeLive do
 
     {:noreply, assign(socket, user: user)}
   end
+
+  defp reverse_byte_order(<<>>), do: <<>>
+
+  defp reverse_byte_order(<<byte::binary-size(2)>> <> rest) do
+    <<reverse_byte_order(rest)::binary, byte::binary>>
+  end
+
+  defp reverse_byte_order(x) when is_binary(x), do: x
 end
