@@ -16,36 +16,31 @@ defmodule ManacaWeb.HomeLive.Index do
 
   @impl true
   def handle_event("check_id", %{"card_id" => card_id}, socket) do
+    # workaround for chinese reader which reads bytes in reverse
     card_id = reverse_byte_order(card_id)
 
-    # switch flow for creating user
-    if socket.assigns[:creating_user] do
-      socket =
-        socket
-        |> assign(new_user: %User{card_id: card_id})
-        |> assign(live_action: :new)
+    socket =
+      case Accounts.get_user_by_card_id(card_id) do
+        nil when byte_size(card_id) >= 6 ->
+          with {:ok, new_user} <- Accounts.create_user(%{card_id: card_id}) do
+            assign(socket, user: new_user)
+          else
+            _ -> socket
+          end
 
-      {:noreply, socket}
-    else
-      socket =
-        case Accounts.get_user_by_card_id(card_id) do
-          nil ->
-            socket
+        nil ->
+          socket
 
-          user ->
-            assign(socket, user: user)
-        end
+        user ->
+          assign(socket, user: user)
+      end
 
-      {:noreply, push_event(socket, "click", %{to: "#card_id_reset"})}
-    end
+    {:noreply, push_event(socket, "click", %{to: "#card_id_reset"})}
   end
 
   @impl true
   def handle_event("close_user", _, socket),
     do: {:noreply, assign(socket, user: nil, creating_user: false)}
-
-  @impl true
-  def handle_event("create_user", _, socket), do: {:noreply, assign(socket, creating_user: true)}
 
   @impl true
   def handle_event("subtract-" <> num, _, socket) do
@@ -65,11 +60,6 @@ defmodule ManacaWeb.HomeLive.Index do
       })
 
     {:noreply, assign(socket, user: user)}
-  end
-
-  @impl true
-  def handle_info({ManacaWeb.HomeLive.NewUserForm, {:saved, user}}, socket) do
-    {:noreply, assign(socket, user: user, live_action: :index)}
   end
 
   defp reverse_byte_order(<<>>), do: <<>>
