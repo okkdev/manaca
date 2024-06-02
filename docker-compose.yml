@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  myservice:
+  manaca:
     image: ghcr.io/okkdev/manaca:0.1
     container_name: manaca
     environment:
