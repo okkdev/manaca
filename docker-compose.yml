@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  myservice:
+    image: ghcr.io/okkdev/manaca:0.1
+    container_name: manaca
+    environment:
+      - SECRET_KEY_BASE=rcXjMdKihSzCbgf8Hhr9WdEKHVJmOrYx6yFXg/Z6LjbW55kGs7as+oWEbiGHIs3U
+      - PHX_HOST=localhost
+      - DATABASE_PATH=/db/manaca.db
+    volumes:
+      - ./db:/db
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
