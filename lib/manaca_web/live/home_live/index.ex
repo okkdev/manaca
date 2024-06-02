@@ -2,7 +2,6 @@ defmodule ManacaWeb.HomeLive.Index do
   use ManacaWeb, :live_view
 
   alias Manaca.Accounts
-  alias Manaca.Accounts.User
 
   @impl true
   def mount(_params, _session, socket) do
@@ -17,7 +16,7 @@ defmodule ManacaWeb.HomeLive.Index do
   @impl true
   def handle_event("check_id", %{"card_id" => card_id}, socket) do
     # workaround for chinese reader which reads bytes in reverse
-    card_id = reverse_byte_order(card_id)
+    # card_id = reverse_byte_order(card_id)
 
     socket =
       case Accounts.get_user_by_card_id(card_id) do
