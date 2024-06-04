@@ -18,15 +18,17 @@ defmodule ManacaWeb.Router do
   scope "/", ManacaWeb do
     pipe_through :browser
 
-    live "/", HomeLive.Index
-    live "/new", HomeLive.Index, :new
+    live_session :default do
+      live "/", HomeLive.Index
+      live "/new", HomeLive.Index, :new
 
-    live "/users", UserLive.Index, :index
-    live "/users/new", UserLive.Index, :new
-    live "/users/:id/edit", UserLive.Index, :edit
+      live "/users", UserLive.Index, :index
+      live "/users/new", UserLive.Index, :new
+      live "/users/:id/edit", UserLive.Index, :edit
 
-    live "/users/:id", UserLive.Show, :show
-    live "/users/:id/show/edit", UserLive.Show, :edit
+      live "/users/:id", UserLive.Show, :show
+      live "/users/:id/show/edit", UserLive.Show, :edit
+    end
   end
 
   scope "/api", ManacaWeb do

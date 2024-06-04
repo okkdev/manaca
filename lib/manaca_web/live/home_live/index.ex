@@ -15,9 +15,6 @@ defmodule ManacaWeb.HomeLive.Index do
 
   @impl true
   def handle_event("check_id", %{"card_id" => card_id}, socket) do
-    # workaround for chinese reader which reads bytes in reverse
-    # card_id = reverse_byte_order(card_id)
-
     socket =
       case Accounts.get_user_by_card_id(card_id) do
         nil when byte_size(card_id) >= 6 ->
@@ -60,12 +57,4 @@ defmodule ManacaWeb.HomeLive.Index do
 
     {:noreply, assign(socket, user: user)}
   end
-
-  defp reverse_byte_order(<<>>), do: <<>>
-
-  defp reverse_byte_order(<<byte::binary-size(2), rest::binary>>) do
-    <<reverse_byte_order(rest)::binary, byte::binary>>
-  end
-
-  defp reverse_byte_order(x) when is_binary(x), do: x
 end

@@ -19,8 +19,7 @@ defmodule ManacaWeb.HomeLive.NewUserForm do
         phx-submit="save"
       >
         <div class="grid grid-cols-2 gap-3">
-          <.input field={@form[:firstname]} type="text" label="Firstname" />
-          <.input field={@form[:lastname]} type="text" label="Lastname" />
+          <.input field={@form[:name]} type="text" label="Name" />
         </div>
         <.input field={@form[:email]} type="text" label="Email" />
         <.input field={@form[:card_id]} type="text" label="Card ID" class="opacity-50" readonly />

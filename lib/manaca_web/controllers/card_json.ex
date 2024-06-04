@@ -13,8 +13,7 @@ defmodule ManacaWeb.CardJSON do
       id: user.id,
       card_id: user.card_id,
       tokens: user.tokens,
-      firstname: user.firstname,
-      lastname: user.lastname,
+      name: user.name,
       email: user.email
     }
   end

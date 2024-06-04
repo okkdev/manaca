@@ -5,8 +5,7 @@ defmodule Manaca.Accounts.User do
   @primary_key {:id, Ecto.ULID, autogenerate: true}
   schema "users" do
     field :tokens, :integer, default: 0
-    field :firstname, :string
-    field :lastname, :string
+    field :name, :string
     field :email, :string
     field :card_id, :string
 
@@ -16,8 +15,8 @@ defmodule Manaca.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:firstname, :lastname, :email, :card_id, :tokens])
-    # |> validate_required([:firstname, :lastname, :email, :card_id, :tokens])
+    |> cast(attrs, [:name, :email, :card_id, :tokens])
+    # |> validate_required([:name, :email, :card_id, :tokens])
     |> validate_required([:card_id, :tokens])
     # |> validate_format(:email, ~r/@/)
     |> validate_number(:tokens, greater_than_or_equal_to: 0)

@@ -19,8 +19,7 @@ defmodule ManacaWeb.UserLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:firstname]} type="text" label="Firstname" />
-        <.input field={@form[:lastname]} type="text" label="Lastname" />
+        <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:email]} type="text" label="Email" />
         <.input field={@form[:card_id]} type="text" label="Card" />
         <.input field={@form[:tokens]} type="number" label="Tokens" />
