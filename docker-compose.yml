@@ -6,7 +6,9 @@ services:
     container_name: manaca
     environment:
       - SECRET_KEY_BASE=rcXjMdKihSzCbgf8Hhr9WdEKHVJmOrYx6yFXg/Z6LjbW55kGs7as+oWEbiGHIs3U
-      - PHX_HOST=localhost
+      - PHX_HOST=example.com
+      - PHX_HOST_PORT=443
+      - PHX_HOST_SCHEME=https
       - DATABASE_PATH=/db/manaca.db
     volumes:
       - ./db:/db

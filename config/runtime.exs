@@ -48,10 +48,12 @@ if config_env() == :prod do
       """
 
   host = System.get_env("PHX_HOST") || "example.com"
+  host_port = System.get_env("PHX_HOST_PORT") || "443"
+  host_scheme = System.get_env("PHX_HOST_SCHEME") || "https"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :manaca, ManacaWeb.Endpoint,
-    url: [host: host, port: 443, scheme: "https"],
+    url: [host: host, port: host_port, scheme: host_scheme],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
