@@ -19,27 +19,27 @@
         </div>
 
         <button
-          class="p-6 text-xl font-semibold bg-yellow-200 rounded-xl hover:bg-yellow-300 disabled:bg-gray-300 aspect-square"
+          class="p-6 text-xl font-semibold bg-yellow-200 rounded-xl dark:text-gray-800 hover:bg-yellow-300 disabled:bg-gray-300 aspect-square"
           disabled={@user.tokens - 10 < 0}
           phx-click="subtract-10"
         >
           - 10
         </button>
         <button
-          class="p-6 text-xl font-semibold bg-yellow-100 rounded-xl hover:bg-yellow-200 disabled:bg-gray-200 aspect-square"
+          class="p-6 text-xl font-semibold bg-yellow-100 rounded-xl dark:text-gray-800 hover:bg-yellow-200 disabled:bg-gray-200 aspect-square"
           disabled={@user.tokens - 1 < 0}
           phx-click="subtract-1"
         >
           - 1
         </button>
         <button
-          class="p-6 text-xl font-semibold bg-green-100 rounded-xl hover:bg-green-200 aspect-square"
+          class="p-6 text-xl font-semibold bg-green-100 rounded-xl dark:text-gray-800 hover:bg-green-200 aspect-square"
           phx-click="add-1"
         >
           + 1
         </button>
         <button
-          class="p-6 text-xl font-semibold bg-green-200 rounded-xl hover:bg-green-300 aspect-square"
+          class="p-6 text-xl font-semibold bg-green-200 rounded-xl dark:text-gray-800 hover:bg-green-300 aspect-square"
           phx-click="add-10"
         >
           + 10
@@ -50,8 +50,10 @@
             <.button>Personalize</.button>
           </.link>
           <button
-            class="flex justify-center items-center p-2 text-white bg-gray-300 rounded-full hover:bg-gray-400"
+            class="flex justify-center items-center p-2 text-white rounded-full dark:text-black hover:bg-gray-400 bg-zinc-900 dark:bg-zinc-50"
             phx-click="close_user"
+            phx-window-keydown="close_user"
+            phx-key="escape"
           >
             <.icon name="hero-x-mark" class="w-6 h-6" />
           </button>

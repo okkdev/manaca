@@ -9,6 +9,7 @@ services:
       - PHX_HOST=example.com
       - PHX_HOST_PORT=443
       - PHX_HOST_SCHEME=https
+      - MANACA_API_TOKEN=test
       - DATABASE_PATH=/db/manaca.db
     volumes:
       - ./db:/db
