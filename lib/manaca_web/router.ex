@@ -15,8 +15,12 @@ defmodule ManacaWeb.Router do
     plug ManacaWeb.ApiAuthPlug
   end
 
+  pipeline :auth do
+    plug :basic_auth
+  end
+
   scope "/", ManacaWeb do
-    pipe_through :browser
+    pipe_through [:browser, :auth]
 
     live_session :default do
       live "/", HomeLive.Index
@@ -52,5 +56,11 @@ defmodule ManacaWeb.Router do
       live_dashboard "/dashboard", metrics: ManacaWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  defp basic_auth(conn, _opts) do
+    username = System.fetch_env!("AUTH_USERNAME")
+    password = System.fetch_env!("AUTH_PASSWORD")
+    Plug.BasicAuth.basic_auth(conn, username: username, password: password)
   end
 end
